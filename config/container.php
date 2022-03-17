@@ -3,6 +3,7 @@
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use Slim\Interfaces\RouteCollectorInterface;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Views\Twig;
 
@@ -45,13 +46,8 @@ return [
         return $capsule;
     },
 
-    'pdo' => function(ContainerInterface $c) {
-        $settings = $c->get('settings')['db'];
-        $pdo = new PDO("mysql:host=" . $settings['host'] . ";dbname=" . $settings['database'],
-            $settings['username'], $settings['password']);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        return $pdo;
-    }
+    RouteCollectorInterface::class => function (ContainerInterface $container) {
+        return $container->get(App::class)->getRouteCollector();
+    },
  
 ];

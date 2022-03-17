@@ -31,7 +31,7 @@ $settings['error'] = [
     // Display error details in error log
     'log_error_details' => $isDebug,
 ];
-
+// dd($settings);
 // Database settings
 $settings['db'] = [
     'driver' => 'mysql',

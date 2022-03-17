@@ -3,11 +3,11 @@
 {% block content %}
     <div class="card">
         <div class="card-header">
-            Домашняя страница
+            Профиль
         </div>
         <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <h3>Добро пожаловать, <b>{{ user.name }}</b></h3>
+            <p><b>Дата регистрации: </b> {{ user.created_at }}</p>
             <a href="{{ routes['logout']}}" class="btn btn-primary">Выйти</a>
         </div>
     </div>

@@ -3,7 +3,7 @@
 if (!function_exists('dd')) {
     function dd($data){
         echo '<pre>';
-        die(var_dump($data));
+        die(print_r($data));
         echo '</pre>';
     }
 }
