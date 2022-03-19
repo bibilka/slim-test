@@ -1,7 +1,7 @@
 <?php
 
+use App\Handlers\ErrorHandler;
 use Slim\App;
-use Slim\Middleware\ErrorMiddleware;
 use Slim\Views\TwigMiddleware;
 
 return function (App $app) {
@@ -12,8 +12,9 @@ return function (App $app) {
     $app->addRoutingMiddleware();
 
     // Catch exceptions and errors
-    $app->add(ErrorMiddleware::class);
-
+    $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+    $errorMiddleware->setDefaultErrorHandler(ErrorHandler::class);
+    
     // Create Twig
     $app->add(TwigMiddleware::createFromContainer($app));
 };

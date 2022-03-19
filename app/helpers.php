@@ -7,3 +7,9 @@ if (!function_exists('dd')) {
         echo '</pre>';
     }
 }
+
+if (!function_exists('isDebugMode')) {
+    function isDebugMode(){
+        return filter_var(getenv('APP_DEBUG'), FILTER_VALIDATE_BOOLEAN);
+    }
+}

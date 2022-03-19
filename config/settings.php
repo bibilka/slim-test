@@ -1,10 +1,12 @@
 <?php
 
+$isDebug = isDebugMode();
+
 // Should be set to 0 in production
-error_reporting(E_ALL);
+error_reporting($isDebug ? E_ALL : false);
 
 // Should be set to '0' in production
-ini_set('display_errors', '1');
+ini_set('display_errors', 0);
 
 // Timezone
 date_default_timezone_set('Europe/Moscow');
@@ -14,8 +16,6 @@ $settings = [];
 
 // Path settings
 $settings['root'] = dirname(__DIR__);
-
-$isDebug = getenv('APP_DEBUG');
 
 // Error Handling Middleware settings
 $settings['error'] = [
@@ -31,7 +31,7 @@ $settings['error'] = [
     // Display error details in error log
     'log_error_details' => $isDebug,
 ];
-// dd($settings);
+
 // Database settings
 $settings['db'] = [
     'driver' => 'mysql',

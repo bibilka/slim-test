@@ -28,22 +28,85 @@
 {% endblock %}
 
 {% block content %}
-    <div class="base-form">
-        <form action="{{ routes['doSignup']}}" method="post">
-            <h2 class="text-center">Регистрация</h2>       
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Имя (username)" required="required">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Пароль" required="required">
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" placeholder="Повторите пароль" required="required">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
-            </div>    
-        </form>
-        <p class="text-center">Уже есть аккаунт? <a href="{{ routes['loginPage']}}">Войти</a></p>
+
+    <div id="alert-info" class="alert alert-info" role="alert" style="display:none">
+        <b>Регистрация прошла успешно!</b>
+        <br>Можете <a href="{{ routes['loginPage']}}">войти</a>.
     </div>
+    <div class="base-form">
+        <div id="main-block">
+            <div id="alert-error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display:none">
+                <strong>Ошибка.</strong> Проверьте правильность заполнения полей.
+            </div>
+            <form action="{{ routes['doSignup']}}" method="post" id="sign-up">
+                <h2 class="text-center">Регистрация</h2><br> 
+                <div class="form-group">
+                    <input type="text" name="name" class="form-control" placeholder="Имя (username)">
+                    <small id="name-help" class="text-danger">
+                    </small>      
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" class="form-control" placeholder="Пароль" required="required">
+                    <small id="password-help" class="text-danger">
+                    </small>  
+                </div>
+                <div class="form-group">
+                    <input type="password" name="confirm_password" class="form-control" placeholder="Повторите пароль" required="required">
+                    <small id="confirm_password-help" class="text-danger">
+                    </small>  
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+                </div>    
+            </form>
+            <p class="text-center">Уже есть аккаунт? <a href="{{ routes['loginPage']}}">Войти</a></p>
+        </div
+    </div>
+
+    <script>
+    $("#sign-up").on("submit", function(e) {
+
+        e.preventDefault();
+
+        $('#alert-error').hide()
+        $('input').removeClass('is-invalid')
+        $('div.form-group small').empty()
+
+        var data = $(this).serialize();
+
+        $.ajax({
+            url: '/auth/signup',
+            type: 'POST',
+            dataType : "json",
+            data: data,
+        }).done(function(data) {
+            
+            if (data.status && data.data.user_id) {
+                $('#alert-error').hide()
+                $('#main-block').hide()
+                $('#alert-info').show()
+
+                setTimeout(function(){
+                    window.location.replace("{{ routes['loginPage']}}");
+                }, 1500);
+            } else {
+                $('#alert-error').show()
+            }
+
+        }).fail(function(data) {
+
+            $('#alert-error').show()
+
+            response = data.responseJSON
+            if (response.code == 422 && response.errors) {
+                jQuery.each(response.errors, function(index, item) {
+                    $('[name='+index+']').addClass('is-invalid')
+                    jQuery.each(item, function(key, error) {
+                        $('#'+index+'-help').append(error + '<br>')
+                    });
+                });
+            }
+        });
+    });
+    </script>
 {% endblock %}

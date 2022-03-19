@@ -27,6 +27,15 @@ final class CreateUsersTable extends AbstractMigration
                 'timezone' => true,
                 'default' => Literal::from('now()')
                 ])
+              ->addColumn('updated_at', 'timestamp', 'timestamp', [
+                'timezone' => true,
+                'default' => Literal::from('now()')
+                ])
               ->create();
+        $table->addIndex('name', [
+          'unique' => true,
+          'name' => 'idx_users_name',
+        ]);
+        $table->save();
     }
 }
