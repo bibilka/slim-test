@@ -3,6 +3,9 @@
 use App\Controllers\AppController;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
+use App\Middleware\AuthMiddleware;
+use League\OAuth2\Server\Middleware\ResourceServerMiddleware;
+use League\OAuth2\Server\ResourceServer;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -11,7 +14,7 @@ return function (App $app) {
     $app->group('/app', function (RouteCollectorProxy $group) {
         $group->get('/profile', [AppController::class, 'showProfilePage'])->setName('profilePage');
         $group->get('/home', [AppController::class, 'showHomePage'])->setName('homePage');
-    });
+    })->add(new AuthMiddleware($app->getContainer()));
 
     $app->get('/login', [AuthController::class, 'showLoginPage'])->setName('loginPage');
     $app->get('/register', [AuthController::class, 'showRegisterPage'])->setName('registerPage');

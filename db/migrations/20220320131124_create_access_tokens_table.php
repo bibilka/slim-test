@@ -21,10 +21,10 @@ final class CreateAccessTokensTable extends AbstractMigration
     {
         // create the table
         $table = $this->table('oauth_access_tokens');
-        $table->addColumn('token', 'text')
-                ->addColumn('identifier', 'string')
+        $table->addColumn('identifier', 'string')
                 ->addColumn('user_id', 'integer', ['null' => false])
                 ->addForeignKey('user_id', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
+                ->addColumn('revoked', 'boolean', ['default' => false])
                 ->addColumn('issued_at', 'timestamp', 'timestamp', [
                     'timezone' => true,
                 ])
@@ -36,10 +36,10 @@ final class CreateAccessTokensTable extends AbstractMigration
         $this->execute('ALTER TABLE `oauth_access_tokens` MODIFY COLUMN `issued_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
 
         $table = $this->table('oauth_refresh_tokens');
-        $table->addColumn('refresh_token', 'text')
-                ->addColumn('identifier', 'string')
-                ->addColumn('access_token_id', 'integer', ['null' => false])
+        $table->addColumn('access_token_id', 'integer', ['null' => false])
                 ->addForeignKey('access_token_id', 'oauth_access_tokens', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
+                ->addColumn('identifier', 'string')
+                ->addColumn('revoked', 'boolean', ['default' => false])
                 ->addColumn('issued_at', 'timestamp', 'timestamp', [
                     'timezone' => true,
                     'default' => Literal::from('now()')

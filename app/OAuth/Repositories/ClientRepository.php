@@ -11,7 +11,7 @@ class ClientRepository implements ClientRepositoryInterface
     const CLIENT_SECRET = 'client_secret';
 
     const CLIENT_NAME = 'SLIM TEST APP';
-    const REDIRECT_URI = 'http://foo/bar';
+    const REDIRECT_URI = 'http://localhost/app/profile';
 
     /**
      * {@inheritdoc}

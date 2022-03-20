@@ -2,6 +2,7 @@
 
 namespace App\Handlers;
 
+use App\Exceptions\AuthErrorException;
 use App\Exceptions\BaseAppException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Container\ContainerInterface;
@@ -32,10 +33,10 @@ final class ErrorHandler
     /**
      * Точка входа для обработки ошибок.
      * @param Request $request
-     * @param \Exception $exception
+     * @param \Throwable $exception
      * @return Response
      */
-    public function __invoke(Request $request,\Exception $exception): Response 
+    public function __invoke(Request $request, \Throwable $exception): Response 
     {
         // либо обрабатываем API исключение, либо обычное
         if ($this->wantsJson($request)) {
@@ -47,10 +48,10 @@ final class ErrorHandler
 
     /**
      * Обработчик ошибок API. Когда запрос хочет ответ в виде JSON.
-     * @param \Exception $exception
+     * @param \Throwable $exception
      * @return Response
      */
-    private function handleApiError(\Exception $exception) : Response
+    private function handleApiError(\Throwable $exception) : Response
     {
         $statusCode = $this->getStatusCode($exception);
 
@@ -70,6 +71,10 @@ final class ErrorHandler
             $data['errors'] = $this->validator->getErrors();
         }
 
+        if (isDebugMode()) {
+            $data['trace'] = $exception->getTrace();
+        }
+
         $body = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 
         $response = $this->app->getResponseFactory()->createResponse();
@@ -82,11 +87,14 @@ final class ErrorHandler
 
     /**
      * Обработчик ошибок стандартного сценария. Когда запрос не требует ответа в виде JSON.
-     * @param \Exception
+     * @param \Throwable
      * @return Response
      */
-    private function handleDefaultError(\Exception $exception) : Response
+    private function handleDefaultError(\Throwable $exception) : Response
     {
+        if ($exception instanceof AuthErrorException) {
+            header('Location: http://localhost/login', true, 301);
+        }
         $statusCode = $this->getStatusCode($exception);
         $response = $this->app->getResponseFactory()->createResponse();
         
@@ -125,10 +133,10 @@ final class ErrorHandler
 
     /**
      * Определяет статус-код ошибки.
-     * @param \Exception $exception
+     * @param \Throwable $exception
      * @return int
      */
-    private function getStatusCode(\Exception $exception): int
+    private function getStatusCode(\Throwable $exception): int
     {
         if ($exception instanceof OAuthServerException) {
             return 401;

@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Tokenable;
+
 /**
  * Класс-модель "токен доступа".
  * 
  * @inheritdoc
  * 
  * @property-read int $id
- * @property string $token Токен (строковое значение)
  * @property int $user_id Указатель на пользователя
+ * @property bool $revoked является ли токен использованным (аннулированным)
+ * @property string $identifier Идентификатор
  * 
  * @property-read \App\Models\User $user Пользователь кому принадлежит токен доступа
  *
@@ -21,6 +24,8 @@ namespace App\Models;
  */
 class AccessToken extends Model
 {
+    use Tokenable;
+    
     protected $table = 'oauth_access_tokens';
 
     public $timestamps = false;
@@ -28,6 +33,7 @@ class AccessToken extends Model
     protected $casts = [
         'issued_at' => 'datetime',
         'expired_at' => 'datetime',
+        'revoke' => 'boolean'
     ];
 
     public function refreshTokens()

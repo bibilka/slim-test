@@ -17,11 +17,9 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     {
         $refreshToken = new RefreshToken();
         $refreshToken->access_token_id = AccessToken::whereIdentifier($refreshTokenEntity->getAccessToken()->getIdentifier())->firstOrFail()->id;
-        $refreshToken->refresh_token = 'refresh_token_test'; // ???
-        $refreshToken->identifier = $refreshTokenEntity->getIdentifier();
         $refreshToken->expired_at = $refreshTokenEntity->getExpiryDateTime();
+        $refreshToken->identifier = $refreshTokenEntity->getIdentifier();
         $refreshToken->save();
-        $this->token = $refreshToken;
     }
 
     /**
@@ -29,7 +27,10 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function revokeRefreshToken($tokenId)
     {
-        RefreshToken::whereIdentifier($tokenId)->delete();
+        $token = RefreshToken::whereIdentifier($tokenId)->get();
+        if (!$token)
+            return;
+        $token->revoke();
     }
 
     /**
@@ -37,7 +38,11 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function isRefreshTokenRevoked($tokenId)
     {
-        return RefreshToken::whereIdentifier($tokenId)->exists();
+        $token = RefreshToken::whereIdentifier($tokenId)->get();
+        if ($token === null || $token->isRevoked()) {
+            return true;
+        }
+        return (new AccessTokenRepository())->isAccessTokenRevoked($token->access_token_id);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Tokenable;
 
 /**
  * Класс-модель "рефреш токен".
@@ -9,8 +10,9 @@ namespace App\Models;
  * @inheritdoc
  * 
  * @property-read int $id
- * @property string $refresh_token Рефреш Токен (строковое значение)
  * @property int $access_token_id Указатель на токен доступа
+ * @property bool $revoked является ли токен использованным (аннулированным)
+ * @property string $identifier Идентификатор
  * 
  * @property-read \App\Models\AccessToken $accessToken Токен доступа, для которого был выпущен этот рефреш токен
  *
@@ -20,6 +22,8 @@ namespace App\Models;
  */
 class RefreshToken extends Model
 {
+    use Tokenable;
+
     protected $table = 'oauth_refresh_tokens';
 
     public $timestamps = false;

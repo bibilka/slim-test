@@ -19,7 +19,6 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         $token->user_id = $accessTokenEntity->getUserIdentifier();
         $token->expired_at = $accessTokenEntity->getExpiryDateTime();
         $token->identifier = $accessTokenEntity->getIdentifier();
-        $token->token = (string) $accessTokenEntity;
         $token->save();
     }
 
@@ -28,7 +27,10 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function revokeAccessToken($tokenId)
     {
-        AccessToken::whereIdentifier($tokenId)->delete();
+        $token = AccessToken::whereIdentifier($tokenId)->get();
+        if (!$token)
+            return;
+        $token->revoke();
     }
 
     /**
@@ -36,7 +38,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function isAccessTokenRevoked($tokenId)
     {
-        return AccessToken::whereIdentifier($tokenId)->exists();
+        $token = AccessToken::whereIdentifier($tokenId)->get();
+        if (!$token)
+            return true;
+
+        return $token->isRevoked();
     }
 
     /**
@@ -44,13 +50,8 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      */
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
     {
-        $accessToken = new AccessTokenEntity();
-        $accessToken->setClient($clientEntity);
-        foreach ($scopes as $scope) {
-            $accessToken->addScope($scope);
-        }
-        $accessToken->setUserIdentifier($userIdentifier);
-
-        return $accessToken;
+        $token = new AccessTokenEntity($userIdentifier, $scopes);
+        $token->setClient($clientEntity);
+        return $token;
     }
 }

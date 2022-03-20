@@ -2,14 +2,15 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
 use App\Controllers\BaseController as Controller;
+use App\Models\AccessToken;
+use App\Models\RefreshToken;
 
 final class UserController extends Controller
 {
     public function clearAllTokens($request, $response, array $args)
     {
-        $user = User::whereId($args['id'])->firstOrFail();
-        // ... clear $user tokens
+        AccessToken::whereUserId($args['id'])->update(['revoke' => true]);
+        return $this->jsonResponse($response, true, 'Токены пользователя ID='.$args['id'].' успешно аннулированы');
     }
 }
