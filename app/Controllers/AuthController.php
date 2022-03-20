@@ -3,7 +3,10 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController as Controller;
+use App\Exceptions\AuthErrorException;
 use App\Services\UserService;
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -14,9 +17,12 @@ class AuthController extends Controller
 {
     protected UserService $users;
 
+    protected AuthorizationServer $auth;
+
     public function __construct(ContainerInterface $container){
         parent::__construct($container);
         $this->users = new UserService($container);
+        $this->auth = $container->get(AuthorizationServer::class);
     }
 
     public function showLoginPage($request, $response)
@@ -24,9 +30,14 @@ class AuthController extends Controller
         return $this->view->render($response, 'login.twig', ['routes' => $this->routes]);
     }
 
-    public function doAuth()
+    public function doAuth($request, $response)
     {
-        // ...
+        try {
+            return $this->auth->respondToAccessTokenRequest($request, $response);
+        } catch (OAuthServerException $ex) {
+            throw new AuthErrorException($request, 'Неверные имя пользователя или пароль.');
+        }
+        
     }
 
     public function showRegisterPage($request, $response)

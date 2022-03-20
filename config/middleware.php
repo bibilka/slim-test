@@ -12,8 +12,12 @@ return function (App $app) {
     $app->addRoutingMiddleware();
 
     // Catch exceptions and errors
-    $errorMiddleware = $app->addErrorMiddleware(true, true, true);
-    $errorMiddleware->setDefaultErrorHandler(ErrorHandler::class);
+    if (isDebugMode()) {
+        $app->add(new Zeuxisoo\Whoops\Slim\WhoopsMiddleware);
+    } else {
+        $errorMiddleware = $app->addErrorMiddleware(true, true, true);
+        $errorMiddleware->setDefaultErrorHandler(ErrorHandler::class);
+    }
     
     // Create Twig
     $app->add(TwigMiddleware::createFromContainer($app));

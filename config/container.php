@@ -1,5 +1,12 @@
 <?php
 
+use App\OAuth\Repositories\AccessTokenRepository;
+use App\OAuth\Repositories\ClientRepository;
+use App\OAuth\Repositories\RefreshTokenRepository;
+use App\OAuth\Repositories\ScopeRepository;
+use App\OAuth\Repositories\UserRepository;
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Grant\PasswordGrant;
 use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Factory\AppFactory;
@@ -38,5 +45,30 @@ return [
  
     'validator' => function () {
         return new Awurth\SlimValidation\Validator();
+    },
+
+    AuthorizationServer::class => function() {
+
+        $server = new AuthorizationServer(
+            new ClientRepository(),
+            new AccessTokenRepository(),
+            new ScopeRepository(),
+            'file://' . __DIR__ . '/../keys/private.key',
+            getenv('SECRET_KEY')
+        );
+
+        $passwordGrant = new PasswordGrant(
+            new UserRepository(),
+            new RefreshTokenRepository()
+        );
+        $passwordGrant->setRefreshTokenTTL(
+            new \DateInterval('P1M') // 1 month
+        );
+
+        $server->enableGrantType(
+            $passwordGrant, new \DateInterval('PT1H')
+        ); // 1 hour
+
+        return $server;
     }
 ];

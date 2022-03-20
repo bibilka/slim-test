@@ -29,14 +29,17 @@
 
 {% block content %}
     <div class="base-form">
-        <form action="{{ routes['doAuth']}}" method="post">
+        <div id="alert-error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display:none">
+            <strong>Ошибка.</strong> <br><span id="error-message"></span>
+        </div>
+        <form action="{{ routes['doAuth']}}" id="sign-in" method="post">
             <h2 class="text-center">Авторизация</h2>
             {{ registerUrl }}
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Имя (username)" required="required">
+                <input type="text" name="username" class="form-control" placeholder="Имя (username)" required="required">
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" placeholder="Пароль" required="required">
+                <input type="password" name="password" class="form-control" placeholder="Пароль" required="required">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-block">Войти</button>
@@ -44,4 +47,42 @@
         </form>
         <p class="text-center"><a href="{{ routes['registerPage']}}">Создать новый аккаунт</a></p>
     </div>
+
+    <script>
+    $("#sign-in").on("submit", function(e) {
+
+        e.preventDefault();
+
+        $('#alert-error').hide()
+        $('#error-message').empty()
+
+        let data = {}
+        data.username = $('[name=username]').val()
+        data.password = $('[name=password]').val()
+        data.grant_type = "password"
+        data.scope = "basic"
+        data.client_id = "slimtestapp"
+        data.client_secret = "client_secret"
+
+        $.ajax({
+            url: '{{ routes['doAuth']}}',
+            type: 'POST',
+            dataType : "json",
+            data: data,
+            traditional: true
+        }).done(function(data) {
+            
+            console.log(data)
+
+        }).fail(function(data) {
+            $('#alert-error').show()
+            $('#error-message').empty()
+            if (data.responseJSON && data.responseJSON.message) {
+                $('#error-message').append(data.responseJSON.message)
+            } else {
+                $('#error-message').append('Произошла непредвиденная ошибка. Пожалуйста попробуйте позже.')
+            }
+        });
+    });
+    </script>
 {% endblock %}

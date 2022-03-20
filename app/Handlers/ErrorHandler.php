@@ -2,6 +2,8 @@
 
 namespace App\Handlers;
 
+use App\Exceptions\BaseAppException;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -51,8 +53,15 @@ final class ErrorHandler
     private function handleApiError(\Exception $exception) : Response
     {
         $statusCode = $this->getStatusCode($exception);
+
+        if ($exception instanceof BaseAppException) {
+            $message = $exception->getMessage();
+        } else {
+            $message = isDebugMode() ? $exception->getMessage() : $this->getMessage($statusCode);
+        }
+
         $data = [
-            'message' => isDebugMode() ? $exception->getMessage() : $this->getMessage($statusCode),
+            'message' => $message,
             'status' => false,
             'code' => $statusCode,
         ];
@@ -121,6 +130,10 @@ final class ErrorHandler
      */
     private function getStatusCode(\Exception $exception): int
     {
+        if ($exception instanceof OAuthServerException) {
+            return 401;
+        }
+
         $statusCode = 500;
         if (is_int($exception->getCode()) &&
             $exception->getCode() >= 400 &&

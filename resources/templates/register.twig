@@ -60,7 +60,7 @@
                 </div>    
             </form>
             <p class="text-center">Уже есть аккаунт? <a href="{{ routes['loginPage']}}">Войти</a></p>
-        </div
+        </div>
     </div>
 
     <script>
@@ -75,7 +75,7 @@
         var data = $(this).serialize();
 
         $.ajax({
-            url: '/auth/signup',
+            url: '{{ routes['doSignup']}}',
             type: 'POST',
             dataType : "json",
             data: data,

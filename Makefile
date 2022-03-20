@@ -1,5 +1,6 @@
 build:
 	cp .env.example .env
+	php generate_secret_key.php
 	docker-compose build
 up:
 	composer install
@@ -15,3 +16,5 @@ stop:
 	docker-compose stop
 down:
 	docker-compose down --volumes
+key:
+	php generate_secret_key.php

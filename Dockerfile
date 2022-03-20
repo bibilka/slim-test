@@ -28,6 +28,16 @@ COPY composer.json /var/www
 # Copy existing application directory contents
 COPY . /var/www
 
+# USER www-data
+# RUN rm keys/private.key || true
+# RUN rm keys/public.key || true
+# RUN	openssl genrsa -out /var/www/keys/private.key 2048
+# RUN	openssl rsa -in /var/www/keys/private.key -pubout -out keys/public.key
+# RUN chown www-data:www-data /var/www/keys/public.key
+# RUN chown www-data:www-data /var/www/keys/private.key
+# RUN chmod 660 /var/www/keys/public.key
+# RUN chmod 660 /var/www/keys/private.key
+
 # Set working directory
 WORKDIR /var/www
 
