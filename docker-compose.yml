@@ -39,10 +39,10 @@ services:
       - "3306:3306"
     volumes:
       - 'dbdata:/var/lib/mysql'
-      - ./docker/mysql/privileges.sql:/docker-entrypoint-initdb.d/dump.sql
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     networks:

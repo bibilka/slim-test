@@ -7,28 +7,39 @@
 - [Git](https://git-scm.com)
 - Linux (желательно, т.к. необходимо генерировать ключи)
 
-Порядок установки:
-## 1. Склонировать проект локально.
+## Порядок установки:
+
+### 1. Развернуть проект.
+Склонировать проект локально.
 ```
 git clone https://github.com/bibilka/slim-test
 
 cd slim-test
 ```
-## 2. Развернуть проект.
-
-Собрать проект (будет выполнен build для контейнеров докера, создан файл с конфигурационными параметрами `.env` и сгенерирован случайный секретный ключ): 
+Собрать проект (будет выполнен build для контейнеров докера, создан файл с конфигурационными параметрами `.env`): 
 ```
 make build
 ```
+### 2. Генерация секретных ключей.
 Сгенерировать пару public/private ключей. Эти ключи используются для подписи и проверки передаваемых JWT.
 ```
+make generate_keys
+```
+**(Опциально)** Если при выполнении этой команды возникнут проблемы или ошибки, тогда ключи необходимо сгенерировать вручную:
+```
+sudo rm -rf keys/private.key || true
+sudo rm -rf keys/public.key || true
+
 openssl genrsa -out keys/private.key 2048
 openssl rsa -in keys/private.key -pubout -out keys/public.key
 sudo chown www-data:www-data keys/public.key
 sudo chown www-data:www-data keys/private.key
 sudo chmod 660 keys/public.key
 sudo chmod 660 keys/private.key
+
+php generate_secret_key.php
 ```
+### 3. Запуск и настройка.
 А затем запустить (будет выполнен up для контейнеров докера и composer install): 
 ```
 make up
@@ -45,7 +56,7 @@ make migrate
 - Выполнить rollback миграции базы данных: `make rollback`
 - Выполнить seed базы данных: `make seed`
 
-## 3. Готово
+### 4. Готово
 
 Работающая версия проекта доступна по адресу: `http://localhost/`
 - Регистрация: `http://localhost/register`
