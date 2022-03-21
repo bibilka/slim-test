@@ -7,6 +7,9 @@ up:
 	docker-compose up -d
 	docker-compose ps
 migrate:
+	docker-compose stop
+	docker-compose up -d
+	docker-compose ps
 	composer install
 	composer dump-autoload
 	vendor/bin/phinx migrate
