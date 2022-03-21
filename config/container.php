@@ -70,7 +70,7 @@ return [
             new \DateInterval('P1M') // 1 month
         );
         $server->enableGrantType(
-            $passwordGrant, new \DateInterval('PT1H')
+            $passwordGrant, new \DateInterval('PT15S')
         ); // 1 hour
 
         // обновление токенов

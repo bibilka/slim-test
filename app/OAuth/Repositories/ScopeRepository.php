@@ -8,13 +8,15 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
+    const BASIC_SCOPE = 'basic';
+
     /**
      * {@inheritdoc}
      */
     public function getScopeEntityByIdentifier($scopeIdentifier)
     {
         $scopes = [
-            'basic' => [
+            self::BASIC_SCOPE => [
                 'description' => 'Basic details about you',
             ]
         ];

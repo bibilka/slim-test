@@ -3,6 +3,7 @@
 use App\Handlers\ErrorHandler;
 use Slim\App;
 use Slim\Views\TwigMiddleware;
+use Zeuxisoo\Whoops\Slim\WhoopsMiddleware;
 
 return function (App $app) {
     // // Parse json, form data and xml
@@ -12,6 +13,7 @@ return function (App $app) {
     $app->addRoutingMiddleware();
 
     // Catch exceptions and errors
+    // $app->add(WhoopsMiddleware::class);
     $errorMiddleware = $app->addErrorMiddleware(true, true, true);
     $errorMiddleware->setDefaultErrorHandler(ErrorHandler::class);
     

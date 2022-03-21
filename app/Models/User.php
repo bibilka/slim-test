@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
 /**
  * Класс-модель "пользователь".
  * 
@@ -30,5 +32,14 @@ class User extends Model
     public function tokens()
     {
         return $this->hasMany(AccessToken::class);
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s')
+        ];
     }
 }

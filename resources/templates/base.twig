@@ -19,15 +19,24 @@
         SLIM TEST
       </a>
 
-      <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{{ routes['homePage'] }}" class="nav-link px-2 link-secondary">Домашняя страница</a></li>
-        <li><a href="{{ routes['profilePage'] }}" class="nav-link px-2 link-dark">Профиль</a></li>
-      </ul>
+      {% if user %}
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="{{ routes['homePage'] }}" class="nav-link px-2 link-secondary">Домашняя страница</a></li>
+          <li><a href="{{ routes['profilePage'] }}" class="nav-link px-2 link-dark">Профиль</a></li>
+        </ul>
+      {% endif %}
 
-      <div class="col-md-3 text-end">
-        <a href="{{ routes['loginPage'] }}" type="button" class="btn btn-outline-primary me-2">Вход</a>
-        <a href="{{ routes['registerPage'] }}" type="button" class="btn btn-primary">регистрация</a>
-      </div>
+      {% if user %}
+        <div class="col-md-3 text-end">
+          <a href="{{ routes['logout'] }}" type="button" class="btn btn-outline-primary me-2">Выход</a>
+        </div>
+      {% else %}
+        <div class="col-md-3 text-end">
+          <a href="{{ routes['loginPage'] }}" type="button" class="btn btn-outline-primary me-2">Вход</a>
+          <a href="{{ routes['registerPage'] }}" type="button" class="btn btn-primary">регистрация</a>
+        </div>
+      {% endif %}
+      
     </header>
 
 <div class="container">

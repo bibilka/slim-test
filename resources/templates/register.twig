@@ -38,7 +38,7 @@
             <div id="alert-error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display:none">
                 <strong>Ошибка.</strong> Проверьте правильность заполнения полей.
             </div>
-            <form action="{{ routes['doSignup']}}" method="post" id="sign-up">
+            <form action="{{ routes['doSignUp']}}" method="post" id="sign-up">
                 <h2 class="text-center">Регистрация</h2><br> 
                 <div class="form-group">
                     <input type="text" name="name" class="form-control" placeholder="Имя (username)">
@@ -75,7 +75,7 @@
         var data = $(this).serialize();
 
         $.ajax({
-            url: '{{ routes['doSignup']}}',
+            url: '{{ routes['doSignUp']}}',
             type: 'POST',
             dataType : "json",
             data: data,

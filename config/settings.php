@@ -6,7 +6,7 @@ $isDebug = isDebugMode();
 error_reporting($isDebug ? E_ALL : false);
 
 // Should be set to '0' in production
-ini_set('display_errors', 0);
+ini_set('display_errors', $isDebug);
 
 // Timezone
 date_default_timezone_set('Europe/Moscow');

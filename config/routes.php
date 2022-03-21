@@ -1,29 +1,29 @@
 <?php
 
-use App\Controllers\AppController;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
+use App\Controllers\ViewController;
 use App\Middleware\AuthMiddleware;
-use League\OAuth2\Server\Middleware\ResourceServerMiddleware;
-use League\OAuth2\Server\ResourceServer;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app) {
 
     $app->group('/app', function (RouteCollectorProxy $group) {
-        $group->get('/profile', [AppController::class, 'showProfilePage'])->setName('profilePage');
-        $group->get('/home', [AppController::class, 'showHomePage'])->setName('homePage');
+        $group->get('/profile', [ViewController::class, 'profile'])->setName('profilePage');
+        $group->get('/home', [ViewController::class, 'home'])->setName('homePage');
     })->add(new AuthMiddleware($app->getContainer()));
 
-    $app->get('/login', [AuthController::class, 'showLoginPage'])->setName('loginPage');
-    $app->get('/register', [AuthController::class, 'showRegisterPage'])->setName('registerPage');
+    $app->redirect('/', '/app/home');
 
-    $app->post('/auth/signup', [AuthController::class, 'doSignUp'])->setName('doSignup');
-    $app->post('/oauth/auth', [AuthController::class, 'doAuth'])->setName('doAuth');
+    $app->get('/login', [ViewController::class, 'login'])->setName('loginPage');
+    $app->get('/register', [ViewController::class, 'register'])->setName('registerPage');
 
-    $app->get('/auth/logout', [AuthController::class, 'logout'])->setName('logout');
+    $app->post('/auth/signup', [AuthController::class, 'signUp'])->setName('doSignUp');
+    $app->post('/oauth/auth', [AuthController::class, 'signIn'])->setName('doSignIn');
 
-    $app->post('/auth/refresh_token', [AuthController::class, 'refreshToken'])->setName('refreshToken');
-    $app->get('/users/{id}/clear_tokens', [UserController::class, 'clearAllTokens'])->setName('clearUsersTokens');
+    $app->get('/auth/logout', [AuthController::class, 'logout'])->setName('logout')->add(new AuthMiddleware($app->getContainer()));
+
+    $app->post('/oauth/refresh_token', [AuthController::class, 'refreshToken'])->setName('refreshToken');
+    $app->get('/users/{id}/revoke_tokens', [UserController::class, 'revokeTokens'])->setName('revokeTokensByUser');
 };

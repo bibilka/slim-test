@@ -92,13 +92,20 @@ final class ErrorHandler
      */
     private function handleDefaultError(\Throwable $exception) : Response
     {
+        $response = $this->app->getResponseFactory()->createResponse();
         if ($exception instanceof AuthErrorException) {
-            header('Location: http://localhost/login', true, 301);
+            return $response->withAddedHeader('Location', '/login');
         }
         $statusCode = $this->getStatusCode($exception);
-        $response = $this->app->getResponseFactory()->createResponse();
         
         $message = isDebugMode() ? $statusCode . ' ' . $exception->getMessage() : $this->getMessage($statusCode);
+
+        if (isDebugMode()) {
+            dd([
+                'exception' => $message,
+                'trace' => $exception->getTraceAsString()
+            ]);
+        }
 
         $response->getBody()->write("<h3>$message</h3>");
         return $response;

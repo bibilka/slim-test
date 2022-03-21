@@ -10,7 +10,9 @@
         "fzaninotto/faker": "^1.5",
         "awurth/slim-validation": "^3.4",
         "league/oauth2-server": "^8.3",
-        "zeuxisoo/slim-whoops": "^0.7.3"
+        "zeuxisoo/slim-whoops": "^0.7.3",
+        "nesbot/carbon": "^2.57",
+        "guzzlehttp/guzzle": "^7.4"
     },
     "autoload": {
         "files": ["app/helpers.php"],

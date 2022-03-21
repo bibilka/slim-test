@@ -10,7 +10,7 @@ trait Tokenable
      */
     public function isRevoked()
     {
-        return $this->revoke == true;
+        return $this->revoked == true;
     }
 
     /**
@@ -19,7 +19,7 @@ trait Tokenable
      */
     public function revoke()
     {
-        $this->revoke = true;
+        $this->revoked = true;
         $this->save();
     }
 }

@@ -2,15 +2,24 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController as Controller;
-use App\Models\AccessToken;
-use App\Models\RefreshToken;
+use App\Controllers\Base\ApiController;
+use App\Models\User;
+use App\OAuth\Repositories\UserRepository;
+use Psr\Container\ContainerInterface;
 
-final class UserController extends Controller
+final class UserController extends ApiController
 {
-    public function clearAllTokens($request, $response, array $args)
+    protected UserRepository $users;
+    
+    public function __construct(ContainerInterface $container){
+        parent::__construct($container);
+        $this->users = new UserRepository;
+    }
+
+    public function revokeTokens($request, $response, array $args)
     {
-        AccessToken::whereUserId($args['id'])->update(['revoke' => true]);
+        $user = User::whereId($args['id'])->firstOrFail();
+        $this->users->revokeAllTokens($user);
         return $this->jsonResponse($response, true, 'Токены пользователя ID='.$args['id'].' успешно аннулированы');
     }
 }

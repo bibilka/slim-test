@@ -19,6 +19,9 @@ $container = $containerBuilder->build();
 // Create App instance
 $app = $container->get(App::class);
 
+// Register database provider
+$app->getContainer()->get('db');
+
 // Register routes
 (require __DIR__ . '/routes.php')($app);
 

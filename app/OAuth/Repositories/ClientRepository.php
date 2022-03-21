@@ -7,9 +7,6 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 class ClientRepository implements ClientRepositoryInterface
 {
-    const CLIENT_ID = 'slimtestapp';
-    const CLIENT_SECRET = 'client_secret';
-
     const CLIENT_NAME = 'SLIM TEST APP';
     const REDIRECT_URI = 'http://localhost/app/profile';
 
@@ -34,8 +31,8 @@ class ClientRepository implements ClientRepositoryInterface
     public function validateClient($clientIdentifier, $clientSecret, $grantType)
     {
         $clients = [
-            self::CLIENT_ID => [
-                'secret'          => \password_hash(self::CLIENT_SECRET, PASSWORD_BCRYPT),
+            getenv('OAUTH_CLIENT_ID') => [
+                'secret'          => \password_hash(getenv('OAUTH_CLIENT_SECRET'), PASSWORD_BCRYPT),
                 'name'            => self::CLIENT_NAME,
                 'redirect_uri'    => self::REDIRECT_URI,
                 'is_confidential' => true,
