@@ -1,0 +1,127 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger SlimTest OAuth2
+  license:
+    name: MIT
+servers:
+  - url: http://localhost
+paths:
+  /auth/signup:
+    post:
+      summary: Запрос на регистрацию нового пользователя
+      operationId: registerNewUser
+      tags:
+        - auth
+      parameters:
+        - name: name
+          in: formData
+          required: true
+          description: Логин пользователя
+          schema:
+            type: string
+        - name: password
+          required: true
+          in: formData
+          description: Пароль пользователя
+          schema:
+            type: string
+        - name: confirm_password
+          required: true
+          in: formData
+          description: Пароль пользователя
+          schema:
+            type: string
+  /oauth/auth:
+    post:
+      summary: Запрос на авторизацию (получение токенов)
+      operationId: OAuthGetAccessToken
+      tags:
+        - auth
+      parameters:
+        - name: grant_type
+          in: formData
+          required: true
+          description: должно быть "password"
+          schema:
+            type: string
+        - name: client_id
+          required: true
+          in: formData
+          description: значение из параметра ENV (OAUTH_CLIENT_ID)
+          schema:
+            type: string
+        - name: client_secret
+          required: true
+          in: formData
+          description: значение из параметра ENV (OAUTH_CLIENT_SECRET)
+          schema:
+            type: string
+        - name: scope
+          required: true
+          in: formData
+          description: должно быть "basic"
+          schema:
+            type: string
+        - name: username
+          required: true
+          in: formData
+          description: имя пользователя
+          schema:
+            type: string
+        - name: password
+          required: true
+          in: formData
+          description: пароль пользователя
+          schema:
+            type: string
+  /oauth/refresh_token:
+    post:
+      summary: Запрос на обновление токена
+      operationId: OAuthGetRefreshToken
+      tags:
+        - auth
+      parameters:
+        - name: grant_type
+          in: formData
+          required: true
+          description: должно быть "refresh_token"
+          schema:
+            type: string
+        - name: client_id
+          required: true
+          in: formData
+          description: значение из параметра ENV (OAUTH_CLIENT_ID)
+          schema:
+            type: string
+        - name: client_secret
+          required: true
+          in: formData
+          description: значение из параметра ENV (OAUTH_CLIENT_SECRET)
+          schema:
+            type: string
+        - name: scope
+          required: true
+          in: formData
+          description: должно быть "basic"
+          schema:
+            type: string
+        - name: refresh_token
+          required: true
+          in: formData
+          description: рефреш токен, который был получен при авторизации
+          schema:
+            type: string
+  /users/{id}/revoke_tokens:
+    post:
+      summary: Отозвать все существующие токены пользователя
+      operationId: revokeTokensByUserId
+      tags:
+        - auth
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID пользователя
+          schema:
+            type: integer

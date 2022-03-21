@@ -16,23 +16,28 @@ use Slim\Interfaces\RouteCollectorInterface;
 use Slim\Views\Twig;
 
 return [
+    // настройки приложения
     'settings' => function () {
         return require __DIR__ . '/settings.php';
     },
 
+    // объект приложения
     App::class => function (ContainerInterface $container) {
         AppFactory::setContainer($container);
         return AppFactory::create();
     },
 
+    // настройка response
     ResponseFactoryInterface::class => function (ContainerInterface $container) {
         return $container->get(Psr17Factory::class);
     },
 
+    // объект для работы с представлениями и шаблонами через Twig
     'view' => function() {
         return Twig::create(__DIR__ . '/../resources/templates', ['cache' => false]);
     },
 
+    // объект для работы с базой данных через Eloquent
     'db' => function (ContainerInterface $container) {
         $capsule = new \Illuminate\Database\Capsule\Manager;
         $capsule->addConnection($container->get('settings')['db']);
@@ -41,16 +46,20 @@ return [
         return $capsule;
     },
 
+    // объект для коллекции роутов
     RouteCollectorInterface::class => function (ContainerInterface $container) {
         return $container->get(App::class)->getRouteCollector();
     },
  
+    // объект для валидации запросов
     'validator' => function () {
         return new Awurth\SlimValidation\Validator();
     },
 
+    // объект для реализации OAuth2 сервера
     AuthorizationServer::class => function() {
 
+        // инициализируем объект и подключаем туда репозитории, а также ключи
         $server = new AuthorizationServer(
             new ClientRepository(),
             new AccessTokenRepository(),
@@ -67,11 +76,11 @@ return [
             $refreshTokenRepository
         );
         $passwordGrant->setRefreshTokenTTL(
-            new \DateInterval('P1M') // 1 month
+            new \DateInterval('P1M') // 1 месяц для рефреш-токена
         );
         $server->enableGrantType(
-            $passwordGrant, new \DateInterval('PT15S')
-        ); // 1 hour
+            $passwordGrant, new \DateInterval('PT1H') // 1 час для токена доступа
+        );
 
         // обновление токенов
         $rtGrant = new RefreshTokenGrant($refreshTokenRepository);
@@ -86,6 +95,7 @@ return [
         return $server;
     },
 
+    // объект resource server middleware для валидации токенов доступа
     ResourceServer::class => function () {
         $server = new ResourceServer(
             new AccessTokenRepository(),            // instance of AccessTokenRepositoryInterface

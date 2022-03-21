@@ -72,6 +72,7 @@
         $('input').removeClass('is-invalid')
         $('div.form-group small').empty()
 
+        // получаем данные из формы
         var data = $(this).serialize();
 
         $.ajax({
@@ -87,6 +88,7 @@
                 $('#alert-info').show()
 
                 setTimeout(function(){
+                    // после небольшой задержки выполняем редирект
                     window.location.replace("{{ routes['loginPage']}}");
                 }, 1500);
             } else {
@@ -96,7 +98,7 @@
         }).fail(function(data) {
 
             $('#alert-error').show()
-
+            // обработка ошибок валидации, которые возвращаются от сервера
             response = data.responseJSON
             if (response.code == 422 && response.errors) {
                 jQuery.each(response.errors, function(index, item) {

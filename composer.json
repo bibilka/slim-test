@@ -12,7 +12,8 @@
         "league/oauth2-server": "^8.3",
         "zeuxisoo/slim-whoops": "^0.7.3",
         "nesbot/carbon": "^2.57",
-        "guzzlehttp/guzzle": "^7.4"
+        "guzzlehttp/guzzle": "^7.4",
+        "symfony/yaml": "^6.0"
     },
     "autoload": {
         "files": ["app/helpers.php"],

@@ -10,9 +10,13 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Класс-репозиторий для работы с OAuth сущностью User (Пользователь системы).
+ */
 class UserRepository implements UserRepositoryInterface
 {
     /**
+     * Проверка существования пользователя с заданным именем и валидация предлагаемого пароля.
      * {@inheritdoc}
      */
     public function getUserEntityByUserCredentials(
@@ -31,6 +35,7 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * Возвращает текущего авторизованного пользователя, если такой есть.
      * @return User|null
      */
     public function getByCurrentAuth(ServerRequestInterface $request) : ?User
@@ -38,6 +43,10 @@ class UserRepository implements UserRepositoryInterface
         return User::whereId($request->getAttribute('oauth_user_id'))->first();
     }
 
+    /**
+     * Аннулирует все существующие токены заданного пользователя.
+     * @param User $user
+     */
     public function revokeAllTokens(User $user)
     {
         $query = AccessToken::whereUserId($user->id);

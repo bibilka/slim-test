@@ -9,9 +9,13 @@ use Carbon\Carbon;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
+/**
+ * Класс-репозиторий для работы с OAuth сущностью Refresh Token (токенами обновления).
+ */
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     /**
+     * Сохранение рефреш токена в базу данных.
      * {@inheritdoc}
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
@@ -25,6 +29,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     }
 
     /**
+     * Аннулировать refresh token.
      * {@inheritdoc}
      */
     public function revokeRefreshToken($tokenId)
@@ -36,6 +41,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     }
 
     /**
+     * Проверить является ли refresh токен аннулированным.
      * {@inheritdoc}
      */
     public function isRefreshTokenRevoked($tokenId)

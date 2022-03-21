@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-
 /**
  * Класс-модель "пользователь".
  * 
@@ -34,6 +32,10 @@ class User extends Model
         return $this->hasMany(AccessToken::class);
     }
 
+    /**
+     * Конвертация текущего объекта пользователя в массив.
+     * @return array
+     */
     public function toArray()
     {
         return [

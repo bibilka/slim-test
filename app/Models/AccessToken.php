@@ -26,21 +26,36 @@ class AccessToken extends Model
 {
     use Tokenable;
     
+    /**
+     * @var string
+     */
     protected $table = 'oauth_access_tokens';
 
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
     protected $casts = [
         'issued_at' => 'datetime',
         'expired_at' => 'datetime',
         'revoke' => 'boolean'
     ];
 
+    /**
+     * Рефреш токены для данного токена доступа.
+     */
     public function refreshTokens()
     {
         return $this->hasMany(RefreshToken::class);
     }
 
+    /**
+     * Пользователь, который обладает данным токеном доступа.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);

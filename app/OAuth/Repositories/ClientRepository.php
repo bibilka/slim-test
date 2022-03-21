@@ -5,6 +5,9 @@ namespace App\OAuth\Repositories;
 use App\OAuth\Entities\ClientEntity;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
+/**
+ * Класс-репозиторий для работы с OAuth сущностью Client.
+ */
 class ClientRepository implements ClientRepositoryInterface
 {
     const CLIENT_NAME = 'SLIM TEST APP';

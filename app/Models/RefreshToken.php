@@ -24,15 +24,28 @@ class RefreshToken extends Model
 {
     use Tokenable;
 
+    /**
+     * @var string
+     */
     protected $table = 'oauth_refresh_tokens';
 
+    /**
+     * @var bool
+     */
     public $timestamps = false;
 
+    /**
+     * @var array
+     */
     protected $casts = [
         'issued_at' => 'datetime',
         'expired_at' => 'datetime',
+        'revoke' => 'boolean'
     ];
 
+    /**
+     * Токен доступа, к которому относится данный Refresh токен.
+     */
     public function accessToken()
     {
         return $this->belongsTo(AccessToken::class);

@@ -5,12 +5,14 @@ use Slim\App;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// формируем контейнер для приложения
 $containerBuilder = new ContainerBuilder();
 
+// подключаем параметры из файла .env
 $dotenv = Dotenv\Dotenv::createUnsafeImmutable(__DIR__ . '/..//');
 $dotenv->load();
 
-// Set up settings
+// устанавливаем конфигурацию элементов контейнера
 $containerBuilder->addDefinitions(__DIR__ . '/container.php');
 
 // Build PHP-DI Container instance

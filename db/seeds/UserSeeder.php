@@ -1,17 +1,14 @@
 <?php
 
-
 use Phinx\Seed\AbstractSeed;
 
+/**
+ * Seeder для таблицы пользователей в базе данных.
+ */
 class UserSeeder extends AbstractSeed
 {
     /**
-     * Run Method.
-     *
-     * Write your database seeder using this method.
-     *
-     * More information on writing seeders is available here:
-     * https://book.cakephp.org/phinx/0/en/seeding.html
+     * Добавляет в базу данных 10 новых пользователей со случайными данными.
      */
     public function run()
     {

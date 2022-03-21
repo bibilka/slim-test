@@ -6,6 +6,9 @@ use App\OAuth\Entities\ScopeEntity;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
+/**
+ * Класс-репозиторий для работы с OAuth сущностью Scope.
+ */
 class ScopeRepository implements ScopeRepositoryInterface
 {
     const BASIC_SCOPE = 'basic';

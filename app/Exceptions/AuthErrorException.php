@@ -2,6 +2,9 @@
 
 namespace App\Exceptions;
 
+/**
+ * Исключение, выбрасываемое при ошибках связанных с авторизацией.
+ */
 class AuthErrorException extends BaseAppException
 {
     /**

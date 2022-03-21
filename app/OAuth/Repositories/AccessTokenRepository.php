@@ -10,9 +10,13 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Класс-репозиторий для работы с OAuth сущностью Access Token (токенами доступа).
+ */
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     /**
+     * Сохранение нового токена в базу данных.
      * {@inheritdoc}
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
@@ -26,6 +30,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     }
 
     /**
+     * Аннулирование токена доступа.
      * {@inheritdoc}
      */
     public function revokeAccessToken($tokenId)
@@ -37,12 +42,17 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
         $token->revoke();
     }
 
+    /**
+     * Аннулирование текущего активного токена доступа.
+     * @param ServerRequestInterface $request
+     */
     public function revokeCurrentToken(ServerRequestInterface $request)
     {
         $this->revokeAccessToken($request->getAttribute('oauth_access_token_id'));
     }
 
     /**
+     * Проверить, является ли токен аннулированным.
      * {@inheritdoc}
      */
     public function isAccessTokenRevoked($tokenId)
@@ -55,6 +65,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     }
 
     /**
+     * Создание нового токена доступа.
      * {@inheritdoc}
      */
     public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
