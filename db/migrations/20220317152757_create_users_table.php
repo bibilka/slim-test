@@ -18,11 +18,11 @@ final class CreateUsersTable extends AbstractMigration
         $table = $this->table('users');
         $table->addColumn('name', 'string') // имя
               ->addColumn('password', 'string') // пароль
-              ->addColumn('created_at', 'timestamp', 'timestamp', [
+              ->addColumn('created_at', 'timestamp', [
                 'timezone' => true,
                 'default' => Literal::from('now()')
                 ]) // дата создания
-              ->addColumn('updated_at', 'timestamp', 'timestamp', [
+              ->addColumn('updated_at', 'timestamp', [
                 'timezone' => true,
                 'default' => Literal::from('now()')
                 ]) // дата редактирования

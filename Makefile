@@ -6,10 +6,12 @@ up:
 	composer install
 	docker-compose up -d
 	docker-compose ps
-	sleep 1
-	vendor/bin/phinx migrate
 migrate:
+	composer install
+	composer dump-autoload
 	vendor/bin/phinx migrate
+rollback:
+	vendor/bin/phinx rollback
 seed:
 	vendor/bin/phinx seed:run
 stop:

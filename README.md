@@ -29,14 +29,20 @@ sudo chown www-data:www-data keys/private.key
 sudo chmod 660 keys/public.key
 sudo chmod 660 keys/private.key
 ```
-А затем запустить (будет выполнен up для контейнеров докера, будут выполнены миграции и composer install): 
+А затем запустить (будет выполнен up для контейнеров докера и composer install): 
 ```
 make up
 ```
+Применить миграции базы данных:
+```
+make migrate
+```
+Дополнительные возможности:
+
 - Генерация SECRET_KEY осуществляется с помощью команды `make key`
 - Конфигурационные параметры можно отредактировать в файле `.env`
 - Остановить проект: `make stop`
-- Выполнить миграции базы данных: `make migrate`
+- Выполнить rollback миграции базы данных: `make rollback`
 - Выполнить seed базы данных: `make seed`
 
 ## 3. Готово
