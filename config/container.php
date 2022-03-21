@@ -70,6 +70,9 @@ return [
 
         $refreshTokenRepository = new RefreshTokenRepository();
 
+        // время жизни токена (в минутах) из конфигурации
+        $tokenLifeTime = getenv('OAUTH_TOKEN_LIFETIME');
+
         // авторизация и получение токена по логину и паролю
         $passwordGrant = new PasswordGrant(
             new UserRepository(),
@@ -79,7 +82,7 @@ return [
             new \DateInterval('P1M') // 1 месяц для рефреш-токена
         );
         $server->enableGrantType(
-            $passwordGrant, new \DateInterval('PT1H') // 1 час для токена доступа
+            $passwordGrant, new \DateInterval('PT'.$tokenLifeTime.'M') // время жизни токена доступа в минутах
         );
 
         // обновление токенов
@@ -88,8 +91,8 @@ return [
         $rtGrant->setRefreshTokenTTL(new DateInterval('P1M')); 
         $server->enableGrantType(
             $rtGrant,
-            // new access tokens will expire after an hour
-            new DateInterval('PT1H') 
+            // время жизни токена доступа в минутах
+            new DateInterval('PT'.$tokenLifeTime.'M') 
         );
 
         return $server;

@@ -99,6 +99,8 @@ class AuthMiddleware
         $request = $request->withHeader('authorization', 'Bearer '. $_COOKIE['access_token']);
 
         $request = $this->resourceServer->validateAuthenticatedRequest($request);
+
+        setcookie('user_id', $request->getAttribute('oauth_user_id'));
     }
 
     /**

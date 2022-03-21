@@ -125,9 +125,7 @@ final class AuthController extends ApiController
         $this->tokens->revokeCurrentToken($request);
 
         // либо можно отозвать вообще все токены текущего пользователя
-        $this->users->revokeAllTokens(
-            $this->users->getByCurrentAuth($request)
-        );
+        $this->users->deauthorizeCurrentUser($request);
 
         // еще тут по идеи можно чистить куки, сессию и прочее...
         // ...

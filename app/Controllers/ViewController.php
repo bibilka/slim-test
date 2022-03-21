@@ -77,6 +77,9 @@ class ViewController
      */
     public function login(RequestInterface $request, ResponseInterface $response) : ResponseInterface
     {
+        // отзываем все токены текущего пользователя (деавторизуем его)
+        $this->users->deauthorizeCurrentUser($request);
+
         return $this->showPage('login', $request, $response);
     }
 
@@ -89,6 +92,9 @@ class ViewController
      */
     public function register(RequestInterface $request, ResponseInterface $response) : ResponseInterface
     {
+        // отзываем все токены текущего пользователя (деавторизуем его)
+        $this->users->deauthorizeCurrentUser($request);
+
         return $this->showPage('register', $request, $response);
     }
 

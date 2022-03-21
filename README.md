@@ -42,3 +42,8 @@ make up
 ## 3. Готово
 
 Работающая версия проекта доступна по адресу: `http://localhost/`
+- Регистрация: `http://localhost/register`
+- Вход (авторизация): `http://localhost/login`
+- Домашняя страница: `http://localhost/app/home`
+- Страница профиля: `http://localhost/app/profile`
+- Swagger (API документация): `http://localhost/docs/api/v1`
